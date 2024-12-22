@@ -4,14 +4,16 @@
   "description": "Vlogify is a platform for travel vloggers to showcase their journeys and amplify their reach. By linking Instagram profiles, users can upload photos, videos, reels, and descriptions, sharing their experiences with a global audience. Vlogify helps vloggers grow their audience and connect with like-minded explorers.",
   "main": "index.js",
   "scripts": {
-    "dev" : "nodemon api/index.js",
+    "dev": "nodemon api/index.js",
     "start": "node api/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "mongoose": "^8.9.2",
     "nodemon": "^3.1.9"
   }
 }
