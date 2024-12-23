@@ -34,6 +34,11 @@ const TypingText = () => {
 };
 
 export default function SignUp() {
+
+  const handleChange = (e) => {
+     
+  }
+
   return (
     <div className="flex h-screen bg-gradient-to-b from-gray-900 via-black to-gray-800">
       {/* Left Section */}
@@ -57,18 +62,21 @@ export default function SignUp() {
               id="username"
               placeholder="Username"
               className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
+              onChange={ handleChange }
             />
             <input
               type="email"
               id="email"
               placeholder="Enter email address"
               className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
+              onChange={ handleChange }
             />
             <input
               type="password"
               id="password"
               placeholder="Enter password"
               className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
+              onChange={ handleChange }
             />
 
             <button
