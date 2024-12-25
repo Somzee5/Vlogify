@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice.js';
+
 
 const TypingText = () => {
   const phrases = [
@@ -37,9 +40,9 @@ const TypingText = () => {
 export default function SignIn() {
 
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const { loading, error } = useSelector((state) => state.user); 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
 
   const handleChange = (e) => {
@@ -54,7 +57,7 @@ export default function SignIn() {
 
     try
     {
-      setLoading(true);
+      dispatch(signInStart());
 
       const res = await fetch('/api/auth/sign-in',
         {
@@ -71,18 +74,16 @@ export default function SignIn() {
 
       if(data.success === false)
       {
-        setLoading(false);
-        setError(data.message);
+        dispatch(signInFailure(data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
+
+      dispatch(signInSuccess(data));
       navigate('/');
     }
     catch(error)
     {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(data.message));;
     }
 
     
