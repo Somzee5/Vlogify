@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice.js';
+import OAuth from '../components/OAuth.jsx';
 
 
 const TypingText = () => {
@@ -124,6 +125,9 @@ export default function SignIn() {
               onChange={handleChange}
             />
 
+            {/* OAuth Button */}
+            <OAuth />
+
             <button
               type="submit"
               disabled={loading}
@@ -138,6 +142,7 @@ export default function SignIn() {
                 Sign Up
               </a>
             </p>
+
           </form>
 
           {error && (

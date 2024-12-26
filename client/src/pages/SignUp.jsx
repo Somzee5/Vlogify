@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import OAuth from '../components/OAuth';
 
 const TypingText = () => {
   const phrases = [
@@ -130,6 +131,9 @@ export default function SignUp() {
               onChange={handleChange}
             />
 
+            {/* OAuth Button */}
+            <OAuth />
+
             <button
               type="submit"
               disabled={loading}
@@ -144,6 +148,7 @@ export default function SignUp() {
                 Sign In
               </a>
             </p>
+
           </form>
 
           {error && (
