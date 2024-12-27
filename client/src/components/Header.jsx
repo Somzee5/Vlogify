@@ -1,6 +1,7 @@
 import { FaSearch } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import logo from '../assets/vlogify_logo.jpg'
 
 
 export default function Header() {
@@ -12,8 +13,8 @@ export default function Header() {
         {/* Logo Section */}
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img
-            src="https://flowbite.com/docs/images/logo.svg" // Replace this with your custom logo URL.
-            className="h-8"
+            src={logo} // Replace this with your custom logo URL.
+            className="h-8 bg-transparent"
             alt="Logo"
           />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-slate-100">

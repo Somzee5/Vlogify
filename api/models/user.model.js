@@ -19,6 +19,14 @@ const userSchema = new mongoose.Schema({
     avatar : {
         type : String,
         default : "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
+    },
+    instagram: {
+        type: String,
+        default: "", // Default to an empty string, can be updated later
+    },
+    youtube: {
+        type: String,
+        default: "", // Default to an empty string, can be updated later
     }
 }, { timestamps : true } );
 
