@@ -1,8 +1,10 @@
 import { FaSearch } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 
 export default function Header() {
-  const navigate = useNavigate();
+  const { currentUser } = useSelector(state => state.user);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 shadow">
@@ -46,34 +48,30 @@ export default function Header() {
             >
                 About
             </a>
-            <button
-                onClick={() => navigate('/sign-in')}
-                className="text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-400"
-            >
-                Sign In
-            </button>
-            </div>
-
-            {/* Profile Icon */}
-            <div
-            className="ml-8 relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer"
-            onClick={() => navigate('/profile')}
-            >
-            <svg
-                className="absolute w-12 h-12 text-gray-400 -left-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                fillRule="evenodd"
-                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                clipRule="evenodd"
-                ></path>
-            </svg>
-        </div>
 
 
+            <Link to='/profile'>
+              {currentUser ? (
+                <img
+                  src= { currentUser.avatar }
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full cursor-pointer"
+                />
+                
+              ) : (
+                <button
+                  className="text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-400"
+                >
+                  Sign In
+                </button>
+              )}
+            </Link>
+
+
+            
+
+
+          </div>
       </div>
     </nav>
   );
