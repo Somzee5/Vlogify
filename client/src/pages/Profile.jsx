@@ -20,6 +20,55 @@ const TypingEffect = ({ text }) => {
   return <h2 className="text-2xl font-semibold text-white">{displayText}</h2>;
 };
 
+// Modal Component for Social Links Update
+const SocialLinkModal = ({ isOpen, onClose, onSave, initialValue, platform }) => {
+  const [inputValue, setInputValue] = useState(initialValue);
+
+  useEffect(() => {
+    if (isOpen) {
+      setInputValue(initialValue);
+    }
+  }, [isOpen, initialValue]);
+
+  const handleSave = () => {
+    onSave(inputValue);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4">
+          Update {platform} Link
+        </h3>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder={`Enter your ${platform} ID`}
+          className="w-full p-3 border border-gray-300 rounded-md text-gray-800"
+        />
+        <div className="flex justify-end gap-4 mt-4">
+          <button
+            className="px-4 py-2 bg-gray-400 text-white rounded-md"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Profile() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user); // Get user data from Redux store
@@ -34,6 +83,10 @@ export default function Profile() {
     youtube: currentUser.youtube || "",
   });
   const fileRef = useRef(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalPlatform, setModalPlatform] = useState("");
+  const [modalInitialValue, setModalInitialValue] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -100,6 +153,16 @@ export default function Profile() {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
+  };
+
+  const openModal = (platform) => {
+    setModalPlatform(platform);
+    setModalInitialValue(formData[platform]);
+    setIsModalOpen(true);
+  };
+
+  const handleModalSave = (value) => {
+    setFormData({ ...formData, [modalPlatform]: value });
   };
 
   return (
@@ -174,25 +237,36 @@ export default function Profile() {
             />
             {/* Social Links */}
             <div className="flex gap-4 mb-6">
-              <a
-                  href={`https://www.instagram.com/${currentUser.instagram}`}
-                  className="flex items-center px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-full"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaInstagram size={20} className="mr-2" />
-                  Instagram
-                </a>
-                <a
-                  href={`https://www.youtube.com/${currentUser.youtube}`}
-                  className="flex items-center px-4 py-2 bg-red-600 text-white rounded-full"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaYoutube size={20} className="mr-2" />
-                  YouTube
-                </a>
+              <button
+                type="button"
+                onClick={() => {
+                  if (formData.instagram) {
+                    window.open(`https://www.instagram.com/${formData.instagram}/`, "_blank");
+                  } else {
+                    openModal("instagram");
+                  }
+                }}
+                className="flex items-center px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-full"
+              >
+                <FaInstagram size={20} className="mr-2" />
+                Instagram
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (formData.youtube) {
+                    window.open(`https://www.youtube.com/user/${formData.youtube}/`, "_blank");
+                  } else {
+                    openModal("youtube");
+                  }
+                }}
+                className="flex items-center px-4 py-2 bg-red-600 text-white rounded-full"
+              >
+                <FaYoutube size={20} className="mr-2" />
+                YouTube
+              </button>
             </div>
+
             {/* Update Button */}
             <button
               type="button"
@@ -209,6 +283,14 @@ export default function Profile() {
           <span className="text-blue-500 cursor-pointer hover:underline">Sign Out</span>
         </div>
       </div>
+      {/* Social Link Modal */}
+      <SocialLinkModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleModalSave}
+        initialValue={modalInitialValue}
+        platform={modalPlatform}
+      />
     </div>
   );
 }
