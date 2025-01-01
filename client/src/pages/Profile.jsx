@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
-import { updateUser } from "../redux/user/userSlice";
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUser } from "../redux/user/userSlice.js";
 
 // Typing Effect Component
 const TypingEffect = ({ text }) => {
@@ -165,6 +165,48 @@ export default function Profile() {
     setFormData({ ...formData, [modalPlatform]: value });
   };
 
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+
+      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+
+      if(data.success === false)
+      {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+
+      dispatch(deleteUserSuccess(data));
+
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch('api/auth/sign-out');
+      const data = await res.json();
+
+      if(data.success === false)
+      {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      } 
+
+      dispatch(signOutUserSuccess(data));
+    } catch (error) {
+      dispatch(signOutUserFailure(data.message));
+    }
+  };
+
+
   return (
     <div className="flex h-screen bg-gradient-to-b from-gray-900 via-black to-gray-800 items-center justify-center relative overflow-hidden">
       {/* Background Image for trekking/mountains */}
@@ -231,10 +273,12 @@ export default function Profile() {
             <input
               id="password"
               type="password"
-              placeholder="Password"
-              onChange={handleChange}
+              value={formData.password} // Keep it blank initially
+              placeholder="•••••••"
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="mb-4 w-4/5 p-3 border border-gray-600 rounded-md text-lg text-white bg-gray-700"
             />
+
             {/* Social Links */}
             <div className="flex gap-4 mb-6">
               <button
@@ -279,8 +323,16 @@ export default function Profile() {
         </div>
         {/* Footer Actions */}
         <div className="mt-6 flex justify-center gap-6">
-          <span className="text-red-600 cursor-pointer hover:underline">Delete Account</span>
-          <span className="text-blue-500 cursor-pointer hover:underline">Sign Out</span>
+          <span 
+            onClick={handleDeleteUser}
+            className="text-red-600 cursor-pointer hover:underline">
+              Delete Account
+          </span>
+          <span 
+            onClick={handleSignOut}
+            className="text-blue-500 cursor-pointer hover:underline">
+              Sign Out
+          </span>
         </div>
       </div>
       {/* Social Link Modal */}
