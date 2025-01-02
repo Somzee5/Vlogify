@@ -87,6 +87,8 @@ export default function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState("");
   const [modalInitialValue, setModalInitialValue] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -146,7 +148,12 @@ export default function Profile() {
           instagram: updatedUser.instagram,
           youtube: updatedUser.youtube,
         });
-      } else {
+
+        setSuccessMessage("Profile updated successfully!");
+        setTimeout(() => setSuccessMessage(""), 3000); // clearing after 3s
+      } 
+      else 
+      {
         const errorData = await response.json();
         console.error("Failed to update profile:", errorData.message);
       }
@@ -310,7 +317,7 @@ export default function Profile() {
                 YouTube
               </button>
             </div>
-
+            
             {/* Update Button */}
             <button
               type="button"
@@ -319,6 +326,13 @@ export default function Profile() {
             >
               Update Profile
             </button>
+            {/* Success Message */}
+            {successMessage && (
+              <div className="text-green-500 mt-4 text-center">
+                {successMessage}
+              </div>
+            )}
+
           </form>
         </div>
         {/* Footer Actions */}

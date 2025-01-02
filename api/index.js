@@ -16,6 +16,7 @@ dotenv.config();
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import uploadRouter from './routes/upload.route.js';
+import vlogRouter from './routes/vlog.route.js';
 
 
 mongoose.connect(process.env.MONGO).then(() => {
@@ -24,16 +25,15 @@ mongoose.connect(process.env.MONGO).then(() => {
         console.log(err);
 }); 
 
-
-
 app.listen(3000, () => {
     console.log("Server is running at 3000 !!");
 });
 
-
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", uploadRouter);
+app.use("/api/vlog", vlogRouter);
+
 
 // middleware
 app.use((err, req, res, next) => {
