@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUser } from "../redux/user/userSlice.js";
 
 // Typing Effect Component
@@ -326,6 +327,14 @@ export default function Profile() {
             >
               Update Profile
             </button>
+            <div className="mt-4 w-4/5">
+              <Link
+                to="/create-vlog"
+                className="block text-center py-3 bg-[#4caf50] text-white font-bold rounded-md hover:bg-[#388e3c] transition duration-300"
+              >
+                Log New Adventure
+              </Link>
+            </div>
             {/* Success Message */}
             {successMessage && (
               <div className="text-green-500 mt-4 text-center">
