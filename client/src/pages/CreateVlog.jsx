@@ -44,23 +44,31 @@ export default function CreateVlog() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
 
+  const handleFileChange = (e) => {
+    const selectedFiles = e.target.files;
+    if (selectedFiles) {
+      setFiles(selectedFiles); // Store the selected files in the state
+    }
+  };
+  
   const handleImageSubmit = async (e) => {
     if (files.length === 0) {
       console.log("No files selected.");
       return;
     }
+  
     const formData = new FormData();
     Array.from(files).forEach((file) => formData.append("images", file));
-
+  
     setIsUploading(true);
     setUploadSuccess(false);
-
+  
     try {
       const response = await fetch("/api/upload/multiple", {
         method: "POST",
         body: formData,
       });
-
+  
       const data = await response.json();
       if (response.ok) {
         setImageURLs((prev) => [...prev, ...data.imageUrls]);
@@ -160,7 +168,7 @@ export default function CreateVlog() {
               multiple
               id="images"
               className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
-              onChange={(e) => setFiles(e.target.files)}
+              onChange={handleFileChange} // Handle file selection
             />
             <label className="text-white">First image will be cover (Max 5)</label>
             <button
