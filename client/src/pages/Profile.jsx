@@ -83,7 +83,7 @@ export default function Profile() {
     instagram: currentUser.instagram || "",
     youtube: currentUser.youtube || "",
   });
-  const fileRef = useRef(null);
+  const fileRef = useRef(null); 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalPlatform, setModalPlatform] = useState("");
