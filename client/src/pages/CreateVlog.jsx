@@ -43,6 +43,7 @@ export default function CreateVlog() {
   const [imageURLs, setImageURLs] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const handleFileChange = (e) => {
     const selectedFiles = e.target.files;
@@ -53,7 +54,7 @@ export default function CreateVlog() {
   
   const handleImageSubmit = async (e) => {
     if (files.length === 0) {
-      console.log("No files selected.");
+      setError("Please select the image");
       return;
     }
   
@@ -62,6 +63,7 @@ export default function CreateVlog() {
   
     setIsUploading(true);
     setUploadSuccess(false);
+    setError("");
   
     try {
       const response = await fetch("/api/upload/multiple", {
@@ -73,13 +75,18 @@ export default function CreateVlog() {
       if (response.ok) {
         setImageURLs((prev) => [...prev, ...data.imageUrls]);
         setUploadSuccess(true);
+        setError("");
         console.log("Image upload succeeded:", data.imageUrls);
-      } else {
-        console.error("Image upload failed:", data.message);
+      } 
+      else 
+      {
+        setError("Image Upload failed!!");
       }
-    } catch (error) {
-      console.error("Error uploading images:", error);
-    } finally {
+    } 
+    catch (error) {
+      setError(error);
+    } 
+    finally {
       setIsUploading(false);
     }
   };
@@ -92,6 +99,8 @@ export default function CreateVlog() {
     e.preventDefault();
     const payload = {
       ...formData,
+      latitude: formData.latitude || null, // Add latitude
+      longitude: formData.longitude || null, // Add longitude
       imageURL: imageURLs,
       userRef: currentUser._id, // Add userRef from currentUser
     };
@@ -106,12 +115,15 @@ export default function CreateVlog() {
       const data = await response.json();
       if (response.ok) {
         console.log("Vlog created successfully:", data);
-        navigate("/");
+        setError(null); // Clear any previous errors
+        navigate(`/vlog/${data._id}`);
       } else {
         console.error("Failed to create vlog:", data.message);
+        alert("Failed to create your adventure. Please try again.");
       }
     } catch (error) {
       console.error("Error creating vlog:", error);
+      alert("An unexpected error occurred while creating your adventure.");
     }
   };
 
@@ -178,25 +190,30 @@ export default function CreateVlog() {
             >
               Upload
             </button>
-            {/* Display uploaded images */}
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {imageURLs.map((url, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={url}
-                    alt={`Uploaded ${index}`}
-                    className="h-20 w-full object-cover rounded-md"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm"
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
+            {error ? (
+              <p className="text-red-500 mt-2 text-sm">{error}</p>
+            ) : (
+              // Display uploaded images
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                {imageURLs.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={url}
+                      alt={`Uploaded ${index}`}
+                      className="h-20 w-full object-cover rounded-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-sm"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
 
             <input
               type="text"
@@ -226,6 +243,21 @@ export default function CreateVlog() {
               className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
               onChange={(e) => setFormData((prev) => ({ ...prev, best_time_to_visit: e.target.value }))}
             />
+            <input
+              type="number"
+              id="latitude"
+              placeholder="Latitude (optional)"
+              className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
+              onChange={(e) => setFormData((prev) => ({ ...prev, latitude: e.target.value }))}
+            />
+            <input
+              type="number"
+              id="longitude"
+              placeholder="Longitude (optional)"
+              className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
+              onChange={(e) => setFormData((prev) => ({ ...prev, longitude: e.target.value }))}
+            />
+
             <textarea
               id="reviews"
               placeholder="Reviews (optional)"

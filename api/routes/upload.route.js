@@ -28,7 +28,6 @@ router.post('/upload', upload.single('image'), (req, res) => {
 
 // Route for multiple image uploads (new route)
 router.post('/upload/multiple', upload.array('images', 5), (req, res) => {
-  console.log("Received files:", req.files);  // Add this line for debugging
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({
       success: false,
@@ -36,8 +35,7 @@ router.post('/upload/multiple', upload.array('images', 5), (req, res) => {
     });
   }
 
-  const imageUrls = req.files.map((file) => file.path); // Get URLs of uploaded images
-  console.log("Uploaded image URLs:", imageUrls);  // Log the image URLs for debugging
+  const imageUrls = req.files.map((file) => file.path); 
 
   res.status(200).json({
     success: true,

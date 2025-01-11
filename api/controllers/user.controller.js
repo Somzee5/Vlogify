@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from 'bcryptjs';
+import Vlog from "../models/vlog.model.js";
 
 export const test = (req, res) => {
     res.json({
@@ -56,5 +57,24 @@ export const deleteUser = async (req, res, next) => {
         .json('User has been deleted!');
     } catch (error) {
 
+    }
+};
+
+
+
+export const getUserVlogs = async (req, res, next) => {
+    if(req.user.id === req.params.id)
+    {
+        try {
+            const v = await Vlog.find({userRef: req.params.id});
+
+            res.status(200).json(v);
+
+        } catch (error) {
+            next(error);
+        }
+    }
+    else {
+        return next(errorHandler(401, 'You can only view your own vlogs'));
     }
 };
