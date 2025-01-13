@@ -89,6 +89,8 @@ export default function Profile() {
   const [modalPlatform, setModalPlatform] = useState("");
   const [modalInitialValue, setModalInitialValue] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [showVlogsError, setShowVlogsError] = useState(false);
+  const [userVlogs, setUserVlogs] = useState([]);
 
 
   const handleChange = (e) => {
@@ -215,8 +217,28 @@ export default function Profile() {
   };
 
 
+  const handleShowVlogs = async () => {
+    try {
+      setShowVlogsError(false);
+      const res = await fetch(`/api/user/vlog/${currentUser._id}`);
+      const data = await res.json();
+
+      if(data.success === false)
+      {
+        setShowVlogsError(true);
+        return;
+      }
+
+      setUserVlogs(data);
+
+    } catch (error) {
+      setShowVlogsError(true);
+    }
+  };
+
+
   return (
-    <div className="flex h-screen bg-gradient-to-b from-gray-900 via-black to-gray-800 items-center justify-center relative overflow-hidden">
+    <div className="flex bg-gradient-to-b from-gray-900 via-black to-gray-800 items-center justify-center relative overflow-y-visible">
       {/* Background Image for trekking/mountains */}
       <img
         src="https://media.istockphoto.com/id/1479350931/photo/selfie-of-cheerful-woman-on-the-background-of-railey-bay-in-krabi.jpg?s=2048x2048&w=is&k=20&c=Gs2mx20-vFiJ6NFA-59kX3TE927Te3WY0zdeKyM_lmY="
@@ -341,6 +363,38 @@ export default function Profile() {
                 {successMessage}
               </div>
             )}
+            <button
+              type="button" 
+              onClick={handleShowVlogs}
+              className="w-4/5 py-3 bg-transparent text-yellow-50 font-bold rounded-md transition duration-300 mt-4"
+            >
+              Show Vlogs
+            </button>
+            <p className="text-red-500 mt-5">
+              {showVlogsError ? 'Error Showing Vlogs' : ''}
+            </p>
+
+            {userVlogs && userVlogs.length > 0 && (
+              <div className="mt-6 space-y-4"> {/* Container for vlog entries */}
+                {userVlogs.map((vlog) => (
+                  <div key={vlog._id} className="flex items-center justify-between bg-gray-800 p-4 rounded-lg">
+                    <Link to={`/vlog/${vlog._id}`} className="flex items-center space-x-4">
+                      <img
+                        src={vlog.imageURL[0]}
+                        alt="vlog cover"
+                        className="h-17 w-20 object-cover rounded-lg"
+                      />
+                      <p className="text-white text-lg font-semibold pl-5">{vlog.title}</p>
+                    </Link>
+                    <div className="flex space-x-4">
+                      <button className="text-red-600 hover:underline">Delete</button>
+                      <button className="text-blue-700 hover:underline">Edit</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
 
           </form>
         </div>

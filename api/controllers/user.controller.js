@@ -66,9 +66,9 @@ export const getUserVlogs = async (req, res, next) => {
     if(req.user.id === req.params.id)
     {
         try {
-            const v = await Vlog.find({userRef: req.params.id});
+            const vlog = await Vlog.find({userRef: req.params.id});
 
-            res.status(200).json(v);
+            res.status(200).json(vlog);
 
         } catch (error) {
             next(error);
@@ -77,4 +77,4 @@ export const getUserVlogs = async (req, res, next) => {
     else {
         return next(errorHandler(401, 'You can only view your own vlogs'));
     }
-};
+}; 
