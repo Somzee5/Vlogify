@@ -128,7 +128,7 @@ export default function CreateVlog() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-b from-gray-900 via-black to-gray-800">
+    <div className="flex bg-gradient-to-b from-gray-900 via-black to-gray-800">
       <div className="flex flex-col justify-center items-start w-1/2 px-10 sticky top-0 pt-16">
         <h1 className="text-6xl font-extrabold text-indigo-400 tracking-wide">
           Log New Adventure

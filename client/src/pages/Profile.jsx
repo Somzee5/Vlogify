@@ -236,6 +236,30 @@ export default function Profile() {
     }
   };
 
+  const handleVlogDelete = async (vlogId) => {
+    try {
+      const res = await fetch(`/api/vlog/delete/${vlogId}`, {
+        method: 'DELETE',
+
+      });
+
+      const data = res.json();
+
+      if(data.success === false)
+      {
+        console.log(data.message);
+        return;
+      }
+
+      setUserVlogs((vlog) => vlog._id !== vlogId );
+
+      
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
 
   return (
     <div className="flex bg-gradient-to-b from-gray-900 via-black to-gray-800 items-center justify-center relative overflow-y-visible">
@@ -387,7 +411,7 @@ export default function Profile() {
                       <p className="text-white text-lg font-semibold pl-5">{vlog.title}</p>
                     </Link>
                     <div className="flex space-x-4">
-                      <button className="text-red-600 hover:underline">Delete</button>
+                      <button onClick={ () => handleVlogDelete(vlog._id)} className="text-red-600 hover:underline">Delete</button>
                       <button className="text-blue-700 hover:underline">Edit</button>
                     </div>
                   </div>
