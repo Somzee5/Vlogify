@@ -30,5 +30,33 @@ export const deleteVlog = async (req, res, next) => {
     {
         next(error);
     }
+};
 
+
+export const updateVlog = async (req, res, next) => {
+    const vlog = await Vlog.findById(req.params.id);
+
+    if(!vlog)
+    {
+        return(next(errorHandler(401, 'Vlog Not Found!')));
+    }
+
+    if(req.user.id !== vlog.userRef)
+    {
+        return(next(errorHandler(401, 'You can update your own vlogs only!')));
+    }
+
+    try 
+    {
+        const updatedVlog = await Vlog.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );    
+
+        res.status(200).json(updatedVlog);
+    } catch (error)
+    {
+        next(error);
+    }
 };
