@@ -7,6 +7,8 @@ import SignUp from './pages/SignUp';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import CreateVlog from './pages/CreateVlog.jsx';
+import UpdateVlog from './pages/UpdateVlog.jsx';
+
 
 
 export default function App() {
@@ -24,6 +26,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-vlog" element={<CreateVlog />} />
+          <Route path="/update-vlog/:vlogId" element={<UpdateVlog />} />
         </Route>
         
       </Routes>

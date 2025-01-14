@@ -412,7 +412,10 @@ export default function Profile() {
                     </Link>
                     <div className="flex space-x-4">
                       <button onClick={ () => handleVlogDelete(vlog._id)} className="text-red-600 hover:underline">Delete</button>
-                      <button className="text-blue-700 hover:underline">Edit</button>
+                      <Link to={`/update-vlog/${vlog._id}`}>
+                        <button className="text-blue-700 hover:underline">Edit</button>
+                      </Link>
+                      
                     </div>
                   </div>
                 ))}

@@ -60,3 +60,20 @@ export const updateVlog = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const getVlog = async (req, res, next) => {
+    try {
+        const vlog = await Vlog.findById(req.params.id);
+
+        if(!vlog)
+        {
+            return(next(errorHandler(401, 'Vlog Not Found!')));
+        }
+
+        res.status(200).json(vlog);
+
+    } catch (error) {
+        next(error);
+    }
+};
