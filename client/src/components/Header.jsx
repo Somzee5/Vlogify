@@ -13,12 +13,9 @@ export default function Header() {
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse group">
           <img
             src={logo}
-            className="h-12 w-12 rounded-lg shadow-lg group-hover:scale-105 transition-transform duration-300"
+            className="h-20 w-20 rounded-lg shadow-lg group-hover:scale-105 transition-transform duration-300"
             alt="Vlogify Logo"
           />
-          <span className="self-center text-3xl font-bold whitespace-nowrap bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-            Vlogify
-          </span>
         </Link>
 
         {/* Search Bar */}
