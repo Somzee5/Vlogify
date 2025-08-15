@@ -169,7 +169,7 @@ export default function CreateVlog() {
             <input
               type="text"
               id="category"
-              placeholder="Category"
+              placeholder="Category (e.g. Trekking, culture, Camping...)"
               className="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 py-2 px-3 text-white placeholder-gray-500 focus:ring-indigo-500 focus:outline-none"
               onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
               required

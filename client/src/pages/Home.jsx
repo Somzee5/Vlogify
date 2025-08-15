@@ -12,7 +12,7 @@ export default function Home() {
   const { currentUser } = useSelector(state => state.user);
 
   const categories = [
-    'all', 'adventure', 'culture', 'food', 'nature', 'city', 'beach', 'mountain', 'roadtrip'
+    'all', 'adventure', 'culture', 'food', 'nature', 'city', 'beach', 'mountain', 'roadtrip', 'trekking'
   ];
 
   useEffect(() => {
@@ -39,9 +39,17 @@ export default function Home() {
   };
 
   const filteredVlogs = vlogs.filter(vlog => {
-    const matchesSearch = vlog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         vlog.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         vlog.location_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase();
+    
+    // Search through multiple fields including adventure types and activities
+    const matchesSearch = 
+      vlog.title.toLowerCase().includes(searchLower) ||
+      vlog.description.toLowerCase().includes(searchLower) ||
+      vlog.location_name.toLowerCase().includes(searchLower) ||
+      vlog.category.toLowerCase().includes(searchLower) ||
+      (vlog.tags && vlog.tags.some(tag => tag.toLowerCase().includes(searchLower))) ||
+      (vlog.cost_estimate && vlog.cost_estimate.toLowerCase().includes(searchLower)) ||
+      (vlog.best_time_to_visit && vlog.best_time_to_visit.toLowerCase().includes(searchLower));
     
     const matchesCategory = selectedCategory === 'all' || 
                            vlog.category.toLowerCase() === selectedCategory.toLowerCase();
@@ -58,7 +66,8 @@ export default function Home() {
       city: 'from-blue-500 to-indigo-500',
       beach: 'from-cyan-500 to-blue-500',
       mountain: 'from-gray-500 to-slate-500',
-      roadtrip: 'from-indigo-500 to-purple-500'
+      roadtrip: 'from-indigo-500 to-purple-500',
+      trekking: 'from-emerald-500 to-green-600'
     };
     return colors[category] || 'from-gray-500 to-slate-500';
   };
@@ -114,7 +123,7 @@ export default function Home() {
               <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
               <input
                 type="text"
-                placeholder="Search adventures, destinations, or experiences..."
+                placeholder="Search adventures, destinations, activities, or experiences..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-12 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg"
