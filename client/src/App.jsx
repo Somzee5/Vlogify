@@ -5,34 +5,36 @@ import Profile from './pages/Profile';
 import About from './pages/About';
 import SignUp from './pages/SignUp';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import CreateVlog from './pages/CreateVlog.jsx';
 import UpdateVlog from './pages/UpdateVlog.jsx';
 import Vlog from './pages/Vlog.jsx';
 
-
-
 export default function App() {
   return (
     <BrowserRouter>
-      <Header />
-
-      <Routes>
+      <div className="min-h-screen flex flex-col">
+        <Header />
         
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/vlog/:vlogId" element={<Vlog />} />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/vlog/:vlogId" element={<Vlog />} />
 
-        <Route element={<PrivateRoute />} >
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/create-vlog" element={<CreateVlog />} />
-          <Route path="/update-vlog/:vlogId" element={<UpdateVlog />} />
-          
-        </Route>
-        
-      </Routes>
+            <Route element={<PrivateRoute />} >
+              <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/create-vlog" element={<CreateVlog />} />
+              <Route path="/update-vlog/:vlogId" element={<UpdateVlog />} />
+            </Route>
+          </Routes>
+        </main>
+
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }

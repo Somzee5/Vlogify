@@ -1,4 +1,5 @@
 import Vlog from "../models/vlog.model.js";
+import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 
 export const createVlog = async (req, res, next) => {
@@ -6,6 +7,38 @@ export const createVlog = async (req, res, next) => {
         const vlog = await Vlog.create(req.body);
         return res.status(201).json(vlog);
 
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getAllVlogs = async (req, res, next) => {
+    try {
+        const vlogs = await Vlog.find().sort({ createdAt: -1 });
+        
+        // Fetch user data for each vlog
+        const vlogsWithUsers = await Promise.all(
+            vlogs.map(async (vlog) => {
+                try {
+                    const user = await User.findById(vlog.userRef);
+                    return {
+                        ...vlog.toObject(),
+                        userRef: user ? {
+                            _id: user._id,
+                            username: user.username,
+                            avatar: user.avatar
+                        } : null
+                    };
+                } catch (error) {
+                    return {
+                        ...vlog.toObject(),
+                        userRef: null
+                    };
+                }
+            })
+        );
+        
+        res.status(200).json(vlogsWithUsers);
     } catch (error) {
         next(error);
     }
