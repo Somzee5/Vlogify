@@ -45,6 +45,9 @@ export default function Home() {
                 if (likeResponse.ok) {
                   const { isLiked } = await likeResponse.json();
                   return { ...vlog, isLiked };
+                } else if (likeResponse.status === 401) {
+                  // User not authenticated, set default state
+                  return { ...vlog, isLiked: false };
                 }
                 return { ...vlog, isLiked: false };
               } catch (error) {
@@ -124,6 +127,10 @@ export default function Home() {
 
       if (statusResponse.ok) {
         const { isLiked } = await statusResponse.json();
+      } else if (statusResponse.status === 401) {
+        // User not authenticated, handle accordingly
+        console.log('User not authenticated for like operation');
+        return;
         
         // Toggle like/unlike
         const method = isLiked ? 'DELETE' : 'POST';

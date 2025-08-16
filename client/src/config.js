@@ -2,20 +2,20 @@
 const config = {
   // Development
   development: {
-    apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000',
-    frontendUrl: import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173',
-    appName: import.meta.env.VITE_APP_NAME || 'Vlogify'
+    apiUrl: 'http://localhost:3000',
+    frontendUrl: 'http://localhost:5173',
+    appName: 'Vlogify'
   },
   // Production - UPDATE THESE URLs AFTER DEPLOYMENT
   production: {
-    apiUrl: import.meta.env.VITE_API_URL || 'https://YOUR_BACKEND_URL.onrender.com',
-    frontendUrl: import.meta.env.VITE_FRONTEND_URL || 'https://YOUR_FRONTEND_URL.onrender.com',
-    appName: import.meta.env.VITE_APP_NAME || 'Vlogify'
+    apiUrl: 'https://YOUR_BACKEND_URL.onrender.com',
+    frontendUrl: 'https://YOUR_FRONTEND_URL.onrender.com',
+    appName: 'Vlogify'
   }
 };
 
-// Get current environment
-const environment = import.meta.env.MODE || 'development';
+// Get current environment - default to development for now
+const environment = 'development';
 
 // Export current config
 export const currentConfig = config[environment];

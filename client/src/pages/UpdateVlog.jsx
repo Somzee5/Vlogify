@@ -116,7 +116,7 @@ export default function UpdateVlog() {
     setError("");
   
     try {
-      const response = await fetch("/api/upload/multiple", {
+      const response = await fetch(`${getApiUrl()}/api/upload/multiple`, {
         method: "POST",
         body: formData,
       });

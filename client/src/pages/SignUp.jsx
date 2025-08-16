@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../config.js';
 import OAuth from '../components/OAuth';
 
 const TypingText = () => {
@@ -57,7 +58,7 @@ export default function SignUp() {
     {
       setLoading(true);
 
-      const res = await fetch('/api/auth/sign-up',
+      const res = await fetch(`${getApiUrl()}/api/auth/sign-up`,
         {
           method: 'POST',
           headers: {

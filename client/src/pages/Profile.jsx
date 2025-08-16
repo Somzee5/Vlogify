@@ -109,7 +109,7 @@ export default function Profile() {
     setUploadSuccess(false);
 
     try {
-      const response = await fetch("/api/upload", {
+      const response = await fetch(`${getApiUrl()}/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -202,7 +202,7 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch('api/auth/sign-out');
+      const res = await fetch(`${getApiUrl()}/api/auth/sign-out`);
       const data = await res.json();
 
       if(data.success === false)
@@ -221,7 +221,7 @@ export default function Profile() {
   const handleShowVlogs = async () => {
     try {
       setShowVlogsError(false);
-      const res = await fetch(`${getApiUrl()}/api/user/vlog/${currentUser._id}`);
+              const res = await fetch(`${getApiUrl()}/api/user/public/vlog/${currentUser._id}`);
       const data = await res.json();
 
       if(data.success === false)

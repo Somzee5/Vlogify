@@ -104,6 +104,36 @@ export const signOut = (req, res, next) => {
         .status(200)
         .json('User has been logged out!');
     } catch (error) {
+        next(error);
+    }
+};
 
+// Check if user is authenticated
+export const checkAuth = async (req, res, next) => {
+    try {
+        const token = req.cookies.access_token;
+        
+        if (!token) {
+            return res.status(401).json({ success: false, message: 'No token provided' });
+        }
+
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ success: false, message: 'Invalid token' });
+            }
+
+            try {
+                const user = await User.findById(decoded.id).select('-password');
+                if (!user) {
+                    return res.status(401).json({ success: false, message: 'User not found' });
+                }
+
+                res.status(200).json(user);
+            } catch (error) {
+                next(error);
+            }
+        });
+    } catch (error) {
+        next(error);
     }
 };

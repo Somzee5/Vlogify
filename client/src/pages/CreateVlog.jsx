@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux"; // Import useSelector
+import { getApiUrl } from "../config.js";
 
 const TypingText = () => {
   const phrases = [
@@ -66,7 +67,7 @@ export default function CreateVlog() {
     setError("");
   
     try {
-      const response = await fetch("/api/upload/multiple", {
+      const response = await fetch(`${getApiUrl()}/api/upload/multiple`, {
         method: "POST",
         body: formData,
       });
@@ -105,7 +106,7 @@ export default function CreateVlog() {
       userRef: currentUser._id, // Add userRef from currentUser
     };
     try {
-      const response = await fetch("/api/vlog/create", {
+      const response = await fetch(`${getApiUrl()}/api/vlog/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

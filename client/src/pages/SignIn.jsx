@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice.js';
+import { getApiUrl } from '../config.js';
 import OAuth from '../components/OAuth.jsx';
 
 
@@ -60,7 +61,7 @@ export default function SignIn() {
     {
       dispatch(signInStart());
 
-      const res = await fetch('/api/auth/sign-in',
+      const res = await fetch(`${getApiUrl()}/api/auth/sign-in`,
         {
           method: 'POST',
           headers: {

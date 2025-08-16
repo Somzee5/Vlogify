@@ -60,9 +60,13 @@ export default function Vlog() {
                         if (likeRes.ok) {
                             const { isLiked } = await likeRes.json();
                             setIsLiked(isLiked);
+                        } else if (likeRes.status === 401) {
+                            // User not authenticated, set default state
+                            setIsLiked(false);
                         }
                     } catch (error) {
                         console.error('Error fetching like status:', error);
+                        setIsLiked(false);
                     }
                 }
 
