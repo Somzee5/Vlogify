@@ -21,10 +21,14 @@ const vlogSchema = new mongoose.Schema(
     latitude: {
       type: Number,
       required: false, // Optional
+      min: -90,
+      max: 90
     },
     longitude: {
       type: Number,
       required: false, // Optional
+      min: -180,
+      max: 180
     },
     cost_estimate: {
       type: String,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch, FaMapMarkerAlt, FaClock, FaDollarSign, FaEye, FaHeart, FaShare, FaCopy, FaCheck } from 'react-icons/fa';
+import { FaSearch, FaMapMarkerAlt, FaClock, FaEye, FaHeart, FaShare, FaCopy, FaCheck } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 export default function Home() {
@@ -384,7 +384,7 @@ export default function Home() {
                       </div>
                       {vlog.cost_estimate && (
                         <div className="flex items-center text-gray-300 text-sm">
-                          <FaDollarSign className="text-green-400 mr-2" />
+                          <span className="text-green-400 mr-2">₹</span>
                           {vlog.cost_estimate}
                         </div>
                       )}

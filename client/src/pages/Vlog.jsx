@@ -10,7 +10,6 @@ import 'swiper/css/effect-fade';
 import { 
   FaMapMarkerAlt, 
   FaClock, 
-  FaDollarSign, 
   FaHeart, 
   FaShare, 
   FaInstagram, 
@@ -279,7 +278,7 @@ export default function Vlog() {
                                     
                                     {vlog.cost_estimate && (
                                         <div className="flex items-center space-x-3 text-gray-300">
-                                            <FaDollarSign className="text-green-400" />
+                                            <span className="text-green-400">₹</span>
                                             <span>{vlog.cost_estimate}</span>
                                         </div>
                                     )}
@@ -322,6 +321,30 @@ export default function Vlog() {
                                                 #{tag}
                                             </span>
                                         ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Location Map */}
+                            {vlog.latitude && vlog.longitude && (
+                                <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
+                                    <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                                        <FaMapMarkerAlt className="text-indigo-400 mr-2" />
+                                        Adventure Location
+                                    </h3>
+                                    <div className="bg-gray-900 rounded-lg p-4 text-center">
+                                        <p className="text-gray-300 mb-4">
+                                            📍 Coordinates: {vlog.latitude.toFixed(6)}, {vlog.longitude.toFixed(6)}
+                                        </p>
+                                        <a
+                                            href={`https://www.google.com/maps?q=${vlog.latitude},${vlog.longitude}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200"
+                                        >
+                                            <FaExternalLinkAlt />
+                                            <span>Open in Google Maps</span>
+                                        </a>
                                     </div>
                                 </div>
                             )}
@@ -476,6 +499,15 @@ export default function Vlog() {
                                         <span className="text-gray-400">Posted</span>
                                         <span className="text-white font-medium">{formatDate(vlog.createdAt)}</span>
                                     </div>
+                                    
+                                    {vlog.latitude && vlog.longitude && (
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-400">Location</span>
+                                            <span className="text-white font-medium text-xs">
+                                                {vlog.latitude.toFixed(4)}, {vlog.longitude.toFixed(4)}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
