@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaMapMarkerAlt, FaClock, FaEye, FaHeart, FaShare, FaCopy, FaCheck } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import { getApiUrl } from '../config.js';
 
 export default function Home() {
   const [vlogs, setVlogs] = useState([]);
@@ -29,7 +30,7 @@ export default function Home() {
   const fetchVlogs = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/vlog/all');
+      const response = await fetch(`${getApiUrl()}/api/vlog/all`);
       const data = await response.json();
       
       if (response.ok) {
@@ -38,7 +39,7 @@ export default function Home() {
           const vlogsWithLikeStatus = await Promise.all(
             data.map(async (vlog) => {
               try {
-                const likeResponse = await fetch(`/api/like/status/${vlog._id}`, {
+                const likeResponse = await fetch(`${getApiUrl()}/api/like/status/${vlog._id}`, {
                   credentials: 'include'
                 });
                 if (likeResponse.ok) {
@@ -114,7 +115,7 @@ export default function Home() {
 
     try {
       // Check current like status first
-      const statusResponse = await fetch(`/api/like/status/${vlogId}`, {
+      const statusResponse = await fetch(`${getApiUrl()}/api/like/status/${vlogId}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -126,7 +127,7 @@ export default function Home() {
         
         // Toggle like/unlike
         const method = isLiked ? 'DELETE' : 'POST';
-        const response = await fetch(`/api/like/${vlogId}`, {
+        const response = await fetch(`${getApiUrl()}/api/like/${vlogId}`, {
           method,
           headers: {
             'Content-Type': 'application/json',
