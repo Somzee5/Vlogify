@@ -353,7 +353,7 @@ export default function Profile() {
                 type="button"
                 onClick={() => {
                   if (formData.youtube) {
-                    window.open(`https://www.youtube.com/user/${formData.youtube}/`, "_blank");
+                    window.open(`https://www.youtube.com/@${formData.youtube}/`, "_blank");
                   } else {
                     openModal("youtube");
                   }

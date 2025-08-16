@@ -384,7 +384,7 @@ export default function Vlog() {
                                         <div className="flex space-x-3">
                                             {vlog.userRef.instagram && (
                                                 <a
-                                                    href={vlog.userRef.instagram}
+                                                    href={`https://www.instagram.com/${vlog.userRef.instagram}/`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-lg text-center hover:from-pink-600 hover:to-purple-700 transition-all duration-200"
@@ -395,7 +395,7 @@ export default function Vlog() {
                                             
                                             {vlog.userRef.youtube && (
                                                 <a
-                                                    href={vlog.userRef.youtube}
+                                                    href={`https://www.youtube.com/@${vlog.userRef.youtube}/`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="flex-1 bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg text-center hover:from-red-600 hover:to-red-700 transition-all duration-200"
