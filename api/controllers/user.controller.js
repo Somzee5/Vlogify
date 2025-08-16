@@ -9,6 +9,23 @@ export const test = (req, res) => {
     });
 }
 
+// Get user by ID (public profile)
+export const getUserById = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        
+        if (!user) {
+            return next(errorHandler(404, 'User not found'));
+        }
+
+        // Remove sensitive information
+        const { password, ...userInfo } = user._doc;
+        res.status(200).json(userInfo);
+    } catch (error) {
+        next(error);
+    }
+};
+
 // update user API
 export const updateUser = async (req, res, next) => {
     if(req.user.id !== req.params.id) {
@@ -63,18 +80,12 @@ export const deleteUser = async (req, res, next) => {
 
 
 export const getUserVlogs = async (req, res, next) => {
-    if(req.user.id === req.params.id)
-    {
-        try {
-            const vlog = await Vlog.find({userRef: req.params.id});
+    try {
+        const vlog = await Vlog.find({userRef: req.params.id});
 
-            res.status(200).json(vlog);
+        res.status(200).json(vlog);
 
-        } catch (error) {
-            next(error);
-        }
-    }
-    else {
-        return next(errorHandler(401, 'You can only view your own vlogs'));
+    } catch (error) {
+        next(error);
     }
 }; 

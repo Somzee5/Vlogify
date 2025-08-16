@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import Profile from './pages/Profile';
+import PublicProfile from './pages/PublicProfile';
 import About from './pages/About';
 import SignUp from './pages/SignUp';
 import Header from './components/Header';
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/about" element={<About />} />
+            <Route path="/profile/:id" element={<PublicProfile />} />
             <Route path="/vlog/:vlogId" element={<Vlog />} />
 
             <Route element={<PrivateRoute />} >

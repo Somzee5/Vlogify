@@ -260,16 +260,27 @@ export default function Home() {
 
                     {/* Author and Actions */}
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={vlog.userRef?.avatar || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
-                          alt="Author"
-                          className="w-8 h-8 rounded-full border-2 border-indigo-500/50"
-                        />
-                        <span className="text-gray-300 text-sm font-medium">
-                          {vlog.userRef?.username || 'Anonymous'}
-                        </span>
-                      </div>
+                      <Link 
+                        to={`/profile/${vlog.userRef?._id}`} 
+                        className="flex items-center space-x-3 group hover:scale-105 transition-all duration-200 cursor-pointer"
+                      >
+                        <div className="relative">
+                          <img
+                            src={vlog.userRef?.avatar || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
+                            alt="Author"
+                            className="w-10 h-10 rounded-full border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-all duration-200 object-cover"
+                          />
+                          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800 animate-pulse"></div>
+                        </div>
+                        <div className="text-left">
+                          <span className="text-gray-300 text-sm font-medium group-hover:text-indigo-400 transition-colors duration-200 block">
+                            {vlog.userRef?.username || 'Anonymous'}
+                          </span>
+                          <span className="text-gray-500 text-xs group-hover:text-indigo-500 transition-colors duration-200">
+                            Click to view profile
+                          </span>
+                        </div>
+                      </Link>
                       
                       <Link
                         to={`/vlog/${vlog._id}`}
