@@ -76,26 +76,24 @@ export default function Header() {
             About
           </Link>
 
-          <Link to='/profile'>
-            {currentUser ? (
-              <div className="flex items-center space-x-2 group">
-                <img
-                  src={currentUser.avatar || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full cursor-pointer border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-colors duration-200"
-                />
-                <span className="text-gray-300 group-hover:text-indigo-400 transition-colors duration-200 text-sm font-medium">
-                  {currentUser.username}
-                </span>
-              </div>
-            ) : (
-              <Link to="/sign-in">
-                <button className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  Sign In
-                </button>
-              </Link>
-            )}
-          </Link>
+          {currentUser ? (
+            <Link to='/profile' className="flex items-center space-x-2 group">
+              <img
+                src={currentUser.avatar || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                alt="Profile"
+                className="w-10 h-10 rounded-full cursor-pointer border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-colors duration-200"
+              />
+              <span className="text-gray-300 group-hover:text-indigo-400 transition-colors duration-200 text-sm font-medium">
+                {currentUser.username}
+              </span>
+            </Link>
+          ) : (
+            <Link to="/sign-in">
+              <button className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Sign In
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

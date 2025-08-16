@@ -32,9 +32,14 @@ export default function App() {
         if (response.ok) {
           const userData = await response.json();
           dispatch(signInSuccess(userData));
+        } else if (response.status === 401) {
+          // User is not authenticated - this is normal, not an error
+          // Silently handle this case without logging to reduce console noise
+        } else {
+          console.log('Unexpected response from auth check:', response.status);
         }
       } catch (error) {
-        console.log('User not authenticated or error checking auth status');
+        console.log('Network error checking auth status:', error);
       }
     };
 
