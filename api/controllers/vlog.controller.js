@@ -27,12 +27,14 @@ export const getAllVlogs = async (req, res, next) => {
                             _id: user._id,
                             username: user.username,
                             avatar: user.avatar
-                        } : null
+                        } : null,
+                        likeCount: vlog.likeCount || 0
                     };
                 } catch (error) {
                     return {
                         ...vlog.toObject(),
-                        userRef: null
+                        userRef: null,
+                        likeCount: vlog.likeCount || 0
                     };
                 }
             })

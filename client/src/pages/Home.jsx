@@ -20,6 +20,12 @@ export default function Home() {
     fetchVlogs();
   }, []);
 
+  useEffect(() => {
+    if (currentUser) {
+      fetchVlogs();
+    }
+  }, [currentUser]);
+
   const fetchVlogs = async () => {
     try {
       setLoading(true);
@@ -27,7 +33,28 @@ export default function Home() {
       const data = await response.json();
       
       if (response.ok) {
-        setVlogs(data);
+        // Fetch like status for each vlog if user is logged in
+        if (currentUser) {
+          const vlogsWithLikeStatus = await Promise.all(
+            data.map(async (vlog) => {
+              try {
+                const likeResponse = await fetch(`/api/like/status/${vlog._id}`, {
+                  credentials: 'include'
+                });
+                if (likeResponse.ok) {
+                  const { isLiked } = await likeResponse.json();
+                  return { ...vlog, isLiked };
+                }
+                return { ...vlog, isLiked: false };
+              } catch (error) {
+                return { ...vlog, isLiked: false };
+              }
+            })
+          );
+          setVlogs(vlogsWithLikeStatus);
+        } else {
+          setVlogs(data);
+        }
       } else {
         setError('Failed to fetch vlogs');
       }
@@ -79,30 +106,54 @@ export default function Home() {
     }
   };
 
-  const shareToSocialMedia = (platform, vlog) => {
-    const url = encodeURIComponent(`${window.location.origin}/vlog/${vlog._id}`);
-    const title = encodeURIComponent(vlog.title);
-    const text = encodeURIComponent(vlog.description.substring(0, 100) + '...');
-
-    let shareUrl = '';
-    switch (platform) {
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}&hashtags=travel,adventure,vlogify`;
-        break;
-      case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        break;
-      case 'linkedin':
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-        break;
-      case 'whatsapp':
-        shareUrl = `https://wa.me/?text=${text}%20${url}`;
-        break;
-      default:
-        return;
+  const handleLike = async (vlogId) => {
+    if (!currentUser) {
+      // Handle case when user is not logged in
+      return;
     }
 
-    window.open(shareUrl, '_blank', 'width=600,height=400');
+    try {
+      // Check current like status first
+      const statusResponse = await fetch(`/api/like/status/${vlogId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (statusResponse.ok) {
+        const { isLiked } = await statusResponse.json();
+        
+        // Toggle like/unlike
+        const method = isLiked ? 'DELETE' : 'POST';
+        const response = await fetch(`/api/like/${vlogId}`, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          // Update local state
+          setVlogs(prevVlogs => 
+            prevVlogs.map(vlog => 
+              vlog._id === vlogId 
+                ? { 
+                    ...vlog, 
+                    isLiked: !isLiked,
+                    likeCount: isLiked ? (vlog.likeCount || 1) - 1 : (vlog.likeCount || 0) + 1
+                  }
+                : vlog
+            )
+          );
+        } else {
+          console.error('Error toggling like:', response.status);
+        }
+      }
+    } catch (error) {
+      console.error('Error handling like:', error);
+    }
   };
 
   const filteredVlogs = vlogs.filter(vlog => {
@@ -290,30 +341,18 @@ export default function Home() {
                       </button>
                       
                       <button 
-                        onClick={() => shareToSocialMedia('twitter', vlog)}
-                        className="p-2 bg-black/30 rounded-full text-white hover:bg-blue-500 transition-colors group relative"
-                        title="Share on Twitter"
+                        onClick={() => handleLike(vlog._id)}
+                        className={`p-2 rounded-full text-white transition-colors group relative ${
+                          vlog.isLiked 
+                            ? 'bg-red-500 hover:bg-red-600' 
+                            : 'bg-black/30 hover:bg-black/50'
+                        }`}
+                        title={vlog.isLiked ? 'Unlike this adventure' : 'Like this adventure'}
                       >
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                        </svg>
+                        <FaHeart size={16} className={vlog.isLiked ? 'text-white' : 'text-gray-300'} />
                         {/* Tooltip */}
                         <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                          Share on Twitter
-                        </span>
-                      </button>
-                      
-                      <button 
-                        onClick={() => shareToSocialMedia('facebook', vlog)}
-                        className="p-2 bg-black/30 rounded-full text-white hover:bg-blue-600 transition-colors group relative"
-                        title="Share on Facebook"
-                      >
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                        </svg>
-                        {/* Tooltip */}
-                        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                          Share on Facebook
+                          {vlog.isLiked ? 'Unlike' : 'Like'}
                         </span>
                       </button>
                     </div>
@@ -324,6 +363,15 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
                       {vlog.title}
                     </h3>
+                    
+                    {/* Like Count */}
+                    <div className="flex items-center space-x-2 mb-3">
+                      <FaHeart className="text-red-500 text-sm" />
+                      <span className="text-gray-300 text-sm">
+                        {vlog.likeCount || 0} like{vlog.likeCount !== 1 ? 's' : ''}
+                      </span>
+                    </div>
+                    
                     <p className="text-gray-400 text-sm mb-4 line-clamp-3">
                       {vlog.description}
                     </p>

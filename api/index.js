@@ -17,6 +17,7 @@ import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import uploadRouter from './routes/upload.route.js';
 import vlogRouter from './routes/vlog.route.js';
+import likeRouter from './routes/like.route.js';
 
 
 mongoose.connect(process.env.MONGO).then(() => {
@@ -33,6 +34,7 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", uploadRouter);
 app.use("/api/vlog", vlogRouter);
+app.use("/api/like", likeRouter);
 
 
 // middleware
