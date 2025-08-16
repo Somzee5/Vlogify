@@ -1,4 +1,4 @@
-import { FaSearch } from 'react-icons/fa';
+import { FaPlus, FaGlobe, FaUsers, FaMountain, FaCompass } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import logo from '../assets/vlogify_logo.jpg'
@@ -18,15 +18,46 @@ export default function Header() {
           />
         </Link>
 
-        {/* Search Bar */}
-        <div className="flex-grow flex justify-center max-w-md">
-          <div className="relative w-full">
-            <input
-              type="text"
-              placeholder="Search adventures..."
-              className="block w-full p-3 pl-10 text-sm bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent backdrop-blur-sm"
-            />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        {/* Quick Stats & Actions Section */}
+        <div className="flex-grow flex justify-center">
+          <div className="flex items-center space-x-8">
+            {/* Quick Stats */}
+            <div className="hidden md:flex items-center space-x-6 text-sm">
+              <div className="flex items-center space-x-2 text-gray-300">
+                <FaGlobe className="text-indigo-400" />
+                <span>1000+ Adventures</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-300">
+                <FaUsers className="text-green-400" />
+                <span>500+ Travelers</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-300">
+                <FaMountain className="text-purple-400" />
+                <span>50+ Countries</span>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="flex items-center space-x-3">
+              {currentUser && (
+                <Link
+                  to="/create-vlog"
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  <FaPlus className="text-sm" />
+                  <span className="hidden sm:inline">Share Adventure</span>
+                  <span className="sm:hidden">+</span>
+                </Link>
+              )}
+              <Link
+                to="/"
+                className="flex items-center space-x-2 px-4 py-2 bg-white/10 text-gray-300 rounded-lg hover:bg-white/20 hover:text-white transition-all duration-200 font-medium border border-white/20"
+              >
+                <FaCompass className="text-sm" />
+                <span className="hidden sm:inline">Explore</span>
+                <span className="sm:hidden">🌍</span>
+              </Link>
+            </div>
           </div>
         </div>
 
