@@ -225,9 +225,9 @@ export default function Vlog() {
                                                     {index + 1} / {vlog.imageURL.length}
                                                 </div>
                                             </div>
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
                             ) : (
                                 <div className="h-[400px] bg-gray-800 flex items-center justify-center">
                                     <div className="text-center text-gray-400">

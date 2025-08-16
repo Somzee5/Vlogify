@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaMapMarkerAlt, FaClock, FaEye, FaHeart, FaShare, FaCopy, FaCheck } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import { getApiUrl } from '../config.js';
+import { getApiUrl, getFrontendUrl } from '../config.js';
 
 export default function Home() {
   const [vlogs, setVlogs] = useState([]);
@@ -71,7 +71,7 @@ export default function Home() {
     const shareData = {
       title: vlog.title,
       text: vlog.description.substring(0, 100) + '...',
-      url: `${window.location.origin}/vlog/${vlog._id}`
+      url: `${getFrontendUrl()}/vlog/${vlog._id}`
     };
 
     try {
@@ -98,7 +98,7 @@ export default function Home() {
 
   const handleCopyLink = async (vlogId) => {
     try {
-      const url = `${window.location.origin}/vlog/${vlogId}`;
+      const url = `${getFrontendUrl()}/vlog/${vlogId}`;
       await navigator.clipboard.writeText(url);
       setCopiedVlogId(vlogId);
       setTimeout(() => setCopiedVlogId(null), 2000);

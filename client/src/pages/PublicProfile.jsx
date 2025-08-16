@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaInstagram, FaYoutube, FaMapMarkerAlt, FaGlobe, FaHeart, FaEye, FaShare, FaCalendarAlt, FaStar, FaCopy, FaCheck } from 'react-icons/fa';
 import { MdLocationOn, MdPerson, MdExplore } from 'react-icons/md';
+import { getApiUrl, getFrontendUrl } from '../config.js';
 
 export default function PublicProfile() {
   const { id } = useParams();
@@ -18,7 +19,7 @@ export default function PublicProfile() {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch(`/api/user/${id}`);
+      const response = await fetch(`${getApiUrl()}/api/user/${id}`);
       const data = await response.json();
       
       if (response.ok) {
@@ -34,7 +35,7 @@ export default function PublicProfile() {
 
   const fetchUserVlogs = async () => {
     try {
-      const response = await fetch(`/api/user/public/vlog/${id}`);
+      const response = await fetch(`${getApiUrl()}/api/user/public/vlog/${id}`);
       const data = await response.json();
       
       if (response.ok) {
@@ -54,7 +55,7 @@ export default function PublicProfile() {
     const shareData = {
       title: vlog.title,
       text: vlog.description.substring(0, 100) + '...',
-      url: `${window.location.origin}/vlog/${vlog._id}`
+      url: `${getFrontendUrl()}/vlog/${vlog._id}`
     };
 
     try {
@@ -81,7 +82,7 @@ export default function PublicProfile() {
 
   const handleCopyLink = async (vlogId) => {
     try {
-      const url = `${window.location.origin}/vlog/${vlogId}`;
+      const url = `${getFrontendUrl()}/vlog/${vlogId}`;
       await navigator.clipboard.writeText(url);
       setCopiedVlogId(vlogId);
       setTimeout(() => setCopiedVlogId(null), 2000);
@@ -91,7 +92,7 @@ export default function PublicProfile() {
   };
 
   const shareToSocialMedia = (platform, vlog) => {
-    const url = encodeURIComponent(`${window.location.origin}/vlog/${vlog._id}`);
+    const url = encodeURIComponent(`${getFrontendUrl()}/vlog/${vlog._id}`);
     const title = encodeURIComponent(vlog.title);
     const text = encodeURIComponent(vlog.description.substring(0, 100) + '...');
 

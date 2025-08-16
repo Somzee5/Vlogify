@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux"; // Import useSelector
+import { getApiUrl } from "../config.js";
 
 const TypingText = () => {
   const phrases = [
@@ -62,7 +63,7 @@ export default function UpdateVlog() {
     const fetchVlog = async () => {
 
         const vlogId = params.vlogId;
-        const res = await fetch(`/api/vlog/get/${vlogId}`);
+        const res = await fetch(`${getApiUrl()}/api/vlog/get/${vlogId}`);
         const data = await res.json();
 
         if(data.success === false)
@@ -155,7 +156,7 @@ export default function UpdateVlog() {
     };
     try {
       const vlogId = params.vlogId;
-      const response = await fetch(`/api/vlog/update/${vlogId}`, {
+              const response = await fetch(`${getApiUrl()}/api/vlog/update/${vlogId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

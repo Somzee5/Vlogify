@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { FaInstagram, FaYoutube } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUser } from "../redux/user/userSlice.js";
+import { getApiUrl } from "../config.js";
 
 // Typing Effect Component
 const TypingEffect = ({ text }) => {
@@ -130,7 +131,7 @@ export default function Profile() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`/api/user/update/${currentUser._id}`, {
+      const response = await fetch(`${getApiUrl()}/api/user/update/${currentUser._id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -179,7 +180,7 @@ export default function Profile() {
     try {
       dispatch(deleteUserStart());
 
-      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+      const res = await fetch(`${getApiUrl()}/api/user/delete/${currentUser._id}`,{
         method: 'DELETE',
       });
 
@@ -220,7 +221,7 @@ export default function Profile() {
   const handleShowVlogs = async () => {
     try {
       setShowVlogsError(false);
-      const res = await fetch(`/api/user/vlog/${currentUser._id}`);
+      const res = await fetch(`${getApiUrl()}/api/user/vlog/${currentUser._id}`);
       const data = await res.json();
 
       if(data.success === false)
@@ -238,7 +239,7 @@ export default function Profile() {
 
   const handleVlogDelete = async (vlogId) => {
     try {
-      const res = await fetch(`/api/vlog/delete/${vlogId}`, {
+              const res = await fetch(`${getApiUrl()}/api/vlog/delete/${vlogId}`, {
         method: 'DELETE',
 
       });
