@@ -103,10 +103,28 @@ export const getVlog = async (req, res, next) => {
 
         if(!vlog)
         {
-            return(next(errorHandler(401, 'Vlog Not Found!')));
+            return(next(errorHandler(404, 'Vlog Not Found!')));
         }
 
-        res.status(200).json(vlog);
+        // Fetch user data for the vlog
+        let vlogWithUser = vlog.toObject();
+        try {
+            const user = await User.findById(vlog.userRef);
+            vlogWithUser.userRef = user ? {
+                _id: user._id,
+                username: user.username,
+                avatar: user.avatar,
+                instagram: user.instagram,
+                youtube: user.youtube
+            } : null;
+        } catch (error) {
+            vlogWithUser.userRef = null;
+        }
+
+        // Add like count
+        vlogWithUser.likeCount = vlog.likeCount || 0;
+
+        res.status(200).json(vlogWithUser);
 
     } catch (error) {
         next(error);
