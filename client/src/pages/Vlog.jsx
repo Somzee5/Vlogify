@@ -22,6 +22,7 @@ import {
   FaExternalLinkAlt
 } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import { getApiUrl } from '../config.js';
 
 export default function Vlog() {
     SwiperCore.use([Navigation, Pagination, Autoplay, EffectFade]);
@@ -39,7 +40,7 @@ export default function Vlog() {
         const fetchVlog = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`/api/vlog/get/${params.vlogId}`);
+                const res = await fetch(`${getApiUrl()}/api/vlog/get/${params.vlogId}`);
                 const data = await res.json();
 
                 if (data.success === false) {
@@ -53,7 +54,7 @@ export default function Vlog() {
                 // Fetch like status if user is logged in
                 if (currentUser) {
                     try {
-                        const likeRes = await fetch(`/api/like/status/${params.vlogId}`, {
+                        const likeRes = await fetch(`${getApiUrl()}/api/like/status/${params.vlogId}`, {
                             credentials: 'include'
                         });
                         if (likeRes.ok) {
@@ -68,7 +69,7 @@ export default function Vlog() {
                 // Fetch other vlogs by the same user
                 if (data.userRef?._id) {
                     try {
-                        const userVlogsRes = await fetch(`/api/user/public/vlog/${data.userRef._id}`);
+                        const userVlogsRes = await fetch(`${getApiUrl()}/api/user/public/vlog/${data.userRef._id}`);
                         if (userVlogsRes.ok) {
                             const userVlogsData = await userVlogsRes.json();
                             // Filter out current vlog
@@ -96,7 +97,7 @@ export default function Vlog() {
 
         try {
             const method = isLiked ? 'DELETE' : 'POST';
-            const response = await fetch(`/api/like/${params.vlogId}`, {
+            const response = await fetch(`${getApiUrl()}/api/like/${params.vlogId}`, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include'
