@@ -52,7 +52,7 @@ export default function Vlog() {
                 setVlog(data);
                 
                 // Fetch like status if user is logged in
-                if (currentUser) {
+                if (currentUser && currentUser._id) {
                     try {
                         const likeRes = await fetch(`${getApiUrl()}/api/like/status/${params.vlogId}`, {
                             credentials: 'include',
@@ -63,8 +63,8 @@ export default function Vlog() {
                         if (likeRes.ok) {
                             const { isLiked } = await likeRes.json();
                             setIsLiked(isLiked);
-                        } else if (likeRes.status === 401) {
-                            // User not authenticated, set default state
+                        } else {
+                            // Set default state for any error
                             setIsLiked(false);
                         }
                     } catch (error) {
@@ -100,10 +100,14 @@ export default function Vlog() {
         };
 
         fetchVlog();
-    }, [params.vlogId, currentUser]);
+    }, [params.vlogId, currentUser?._id]);
 
     const handleLike = async () => {
-        if (!currentUser) return;
+        if (!currentUser || !currentUser._id) {
+            // Redirect to sign in instead of showing alert
+            window.location.href = '/sign-in';
+            return;
+        }
 
         try {
             const method = isLiked ? 'DELETE' : 'POST';

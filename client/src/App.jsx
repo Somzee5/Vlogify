@@ -77,8 +77,9 @@ export default function App() {
             <Route path="/profile/:id" element={<PublicProfile />} />
             <Route path="/vlog/:vlogId" element={<Vlog />} />
 
+            <Route path="/" element={<Home />} />
+            
             <Route element={<PrivateRoute />} >
-              <Route path="/" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/create-vlog" element={<CreateVlog />} />
               <Route path="/update-vlog/:vlogId" element={<UpdateVlog />} />

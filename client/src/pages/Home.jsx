@@ -19,7 +19,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchVlogs();
-  }, []);
+  }, [currentUser]);
 
   const fetchVlogs = async () => {
     try {
@@ -30,8 +30,8 @@ export default function Home() {
       if (response.ok) {
         setVlogs(data);
         
-        // Fetch like status for each vlog if user is authenticated
-        if (currentUser) {
+        // Only fetch like status if user is authenticated
+        if (currentUser && currentUser._id) {
           const likeStatuses = {};
           for (const vlog of data) {
             try {
@@ -44,8 +44,8 @@ export default function Home() {
               if (likeRes.ok) {
                 const { isLiked } = await likeRes.json();
                 likeStatuses[vlog._id] = isLiked;
-              } else if (likeRes.status === 401) {
-                // User not authenticated for this request, set default state
+              } else {
+                // Set default state for any error
                 likeStatuses[vlog._id] = false;
               }
             } catch (error) {
@@ -53,6 +53,13 @@ export default function Home() {
               likeStatuses[vlog._id] = false;
             }
           }
+          setLikeStates(likeStatuses);
+        } else {
+          // If no user, set all like states to false
+          const likeStatuses = {};
+          data.forEach(vlog => {
+            likeStatuses[vlog._id] = false;
+          });
           setLikeStates(likeStatuses);
         }
       } else {
@@ -101,9 +108,9 @@ export default function Home() {
   };
 
   const handleLike = async (vlogId, currentLikeState) => {
-    if (!currentUser) {
-      // Redirect to sign in or show a message
-      alert('Please sign in to like vlogs');
+    if (!currentUser || !currentUser._id) {
+      // Redirect to sign in instead of showing alert
+      window.location.href = '/sign-in';
       return;
     }
 
@@ -131,8 +138,6 @@ export default function Home() {
           }
           return vlog;
         }));
-      } else if (response.status === 401) {
-        alert('Please sign in to like vlogs');
       }
     } catch (error) {
       console.error('Error toggling like:', error);
@@ -296,14 +301,14 @@ export default function Home() {
                       <button 
                         onClick={() => handleLike(vlog._id, likeStates[vlog._id])}
                         className={`p-2 rounded-full transition-colors ${
-                          !currentUser 
+                          !currentUser || !currentUser._id
                             ? 'bg-gray-500/50 text-gray-400 cursor-not-allowed' 
                             : likeStates[vlog._id] 
                               ? 'bg-red-500/80 text-white hover:bg-red-600/80' 
                               : 'bg-black/30 text-white hover:bg-black/50'
                         }`}
-                        disabled={!currentUser}
-                        title={!currentUser ? 'Sign in to like' : 'Like this vlog'}
+                        disabled={!currentUser || !currentUser._id}
+                        title={!currentUser || !currentUser._id ? 'Sign in to like' : 'Like this vlog'}
                       >
                         <FaHeart size={16} />
                       </button>
