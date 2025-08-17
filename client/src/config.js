@@ -17,6 +17,12 @@ const config = {
 // Get current environment - automatically detect
 const environment = import.meta.env.MODE || 'development';
 
+// Override with environment variable if provided (for Render deployment)
+const apiUrlFromEnv = import.meta.env.VITE_API_URL;
+if (apiUrlFromEnv) {
+  config.production.apiUrl = apiUrlFromEnv;
+}
+
 // Export current config
 export const currentConfig = config[environment];
 
