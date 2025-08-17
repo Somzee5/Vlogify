@@ -4,6 +4,7 @@ services:
     name: vlogify-backend
     env: node
     plan: free
+    rootDir: api
     buildCommand: npm install
     startCommand: npm start
     envVars:
