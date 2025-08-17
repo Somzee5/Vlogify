@@ -11,12 +11,11 @@ app.use(cookieParser());
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://vlogify-frontend-yckt.onrender.com'] 
-    : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: true, // Allow all origins temporarily for debugging
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  exposedHeaders: ['Set-Cookie']
 }));
 
 import mongoose from 'mongoose';
