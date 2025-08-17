@@ -1,11 +1,14 @@
 // api/utils/cloudinary.js
 import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
 
-// Configure Cloudinary with your account credentials
+dotenv.config();
+
+// Configure Cloudinary with environment variables
 cloudinary.config({
-  cloud_name: 'dawspl3j6',
-  api_key: '587638839735386',
-  api_secret: 'N5mShgA_aXL-RgcwiiwLsRo0d_o',
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 export default cloudinary;
