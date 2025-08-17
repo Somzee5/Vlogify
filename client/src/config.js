@@ -8,14 +8,14 @@ const config = {
   },
   // Production - UPDATE THESE URLs AFTER DEPLOYMENT
   production: {
-    apiUrl: 'https://YOUR_BACKEND_URL.onrender.com',
-    frontendUrl: 'https://YOUR_FRONTEND_URL.onrender.com',
+    apiUrl: 'https://YOUR_ACTUAL_BACKEND_URL.onrender.com',
+    frontendUrl: 'https://YOUR_ACTUAL_FRONTEND_URL.onrender.com',
     appName: 'Vlogify'
   }
 };
 
-// Get current environment - default to development for now
-const environment = 'development';
+// Get current environment - automatically detect
+const environment = import.meta.env.MODE || 'development';
 
 // Export current config
 export const currentConfig = config[environment];
