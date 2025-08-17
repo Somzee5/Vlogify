@@ -16,6 +16,7 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 import CreateVlog from './pages/CreateVlog.jsx';
 import UpdateVlog from './pages/UpdateVlog.jsx';
 import Vlog from './pages/Vlog.jsx';
+import AuthDebug from './components/AuthDebug.jsx';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,13 +35,15 @@ export default function App() {
         
         if (response.ok) {
           const userData = await response.json();
+          console.log('User authenticated:', userData.username);
           dispatch(signInSuccess(userData));
         } else if (response.status === 401) {
           // User is not authenticated - this is normal, not an error
-          // Clear any existing user data
+          console.log('User not authenticated');
           dispatch(signInSuccess(null));
         } else {
           console.log('Unexpected response from auth check:', response.status);
+          dispatch(signInSuccess(null));
         }
       } catch (error) {
         console.log('Network error checking auth status:', error);
@@ -55,7 +58,7 @@ export default function App() {
     // Simulate initial app loading
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500); // Reduced to 1.5 seconds for better UX
+    }, 1000); // Reduced to 1 second for better UX
 
     return () => clearTimeout(timer);
   }, [dispatch]);
@@ -88,6 +91,7 @@ export default function App() {
         </main>
 
         <Footer />
+        <AuthDebug />
       </div>
     </BrowserRouter>
   );

@@ -51,8 +51,9 @@ export default function Vlog() {
 
                 setVlog(data);
                 
-                // Fetch like status if user is logged in
-                if (currentUser && currentUser._id) {
+                // Fetch like status if user is properly logged in
+                if (currentUser && currentUser._id && currentUser.username) {
+                    console.log('Fetching like status for vlog:', params.vlogId);
                     try {
                         const likeRes = await fetch(`${getApiUrl()}/api/like/status/${params.vlogId}`, {
                             credentials: 'include',
@@ -103,8 +104,8 @@ export default function Vlog() {
     }, [params.vlogId, currentUser?._id]);
 
     const handleLike = async () => {
-        if (!currentUser || !currentUser._id) {
-            // Redirect to sign in instead of showing alert
+        if (!currentUser || !currentUser._id || !currentUser.username) {
+            console.log('User not properly authenticated, redirecting to sign-in');
             window.location.href = '/sign-in';
             return;
         }

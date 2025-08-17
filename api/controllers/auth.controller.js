@@ -44,7 +44,7 @@ export const signin = async (req, res, next) => {
         res.cookie('access_token', token, { 
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 24 * 60 * 60 * 1000 // 24 hours
         })
         .status(200)
@@ -71,7 +71,7 @@ export const google = async (req, res, next) => {
             res.cookie('access_token', token, { 
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 24 * 60 * 60 * 1000 // 24 hours
             })
             .status(200)
@@ -97,7 +97,7 @@ export const google = async (req, res, next) => {
             res.cookie('access_token', token, { 
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 24 * 60 * 60 * 1000 // 24 hours
             })
             .status(200)
@@ -118,7 +118,7 @@ export const signOut = (req, res, next) => {
         .clearCookie('access_token', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax'
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         })
         .status(200)
         .json('User has been logged out!');

@@ -30,9 +30,16 @@ export default function Home() {
       if (response.ok) {
         setVlogs(data);
         
-        // Only fetch like status if user is authenticated
-        if (currentUser && currentUser._id) {
-          const likeStatuses = {};
+        // Initialize all like states to false first
+        const likeStatuses = {};
+        data.forEach(vlog => {
+          likeStatuses[vlog._id] = false;
+        });
+        setLikeStates(likeStatuses);
+        
+        // Only fetch like status if user is properly authenticated
+        if (currentUser && currentUser._id && currentUser.username) {
+          console.log('Fetching like status for authenticated user:', currentUser.username);
           for (const vlog of data) {
             try {
               const likeRes = await fetch(`${getApiUrl()}/api/like/status/${vlog._id}`, {
@@ -44,22 +51,13 @@ export default function Home() {
               if (likeRes.ok) {
                 const { isLiked } = await likeRes.json();
                 likeStatuses[vlog._id] = isLiked;
-              } else {
-                // Set default state for any error
-                likeStatuses[vlog._id] = false;
               }
+              // If not ok, keep the default false state
             } catch (error) {
               console.error('Error fetching like status for vlog:', vlog._id, error);
-              likeStatuses[vlog._id] = false;
+              // Keep the default false state
             }
           }
-          setLikeStates(likeStatuses);
-        } else {
-          // If no user, set all like states to false
-          const likeStatuses = {};
-          data.forEach(vlog => {
-            likeStatuses[vlog._id] = false;
-          });
           setLikeStates(likeStatuses);
         }
       } else {
@@ -108,8 +106,8 @@ export default function Home() {
   };
 
   const handleLike = async (vlogId, currentLikeState) => {
-    if (!currentUser || !currentUser._id) {
-      // Redirect to sign in instead of showing alert
+    if (!currentUser || !currentUser._id || !currentUser.username) {
+      console.log('User not properly authenticated, redirecting to sign-in');
       window.location.href = '/sign-in';
       return;
     }
@@ -301,14 +299,14 @@ export default function Home() {
                       <button 
                         onClick={() => handleLike(vlog._id, likeStates[vlog._id])}
                         className={`p-2 rounded-full transition-colors ${
-                          !currentUser || !currentUser._id
+                          !currentUser || !currentUser._id || !currentUser.username
                             ? 'bg-gray-500/50 text-gray-400 cursor-not-allowed' 
                             : likeStates[vlog._id] 
                               ? 'bg-red-500/80 text-white hover:bg-red-600/80' 
                               : 'bg-black/30 text-white hover:bg-black/50'
                         }`}
-                        disabled={!currentUser || !currentUser._id}
-                        title={!currentUser || !currentUser._id ? 'Sign in to like' : 'Like this vlog'}
+                        disabled={!currentUser || !currentUser._id || !currentUser.username}
+                        title={!currentUser || !currentUser._id || !currentUser.username ? 'Sign in to like' : 'Like this vlog'}
                       >
                         <FaHeart size={16} />
                       </button>
