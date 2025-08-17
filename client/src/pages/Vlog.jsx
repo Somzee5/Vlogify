@@ -71,6 +71,9 @@ export default function Vlog() {
                         console.error('Error fetching like status:', error);
                         setIsLiked(false);
                     }
+                } else {
+                    // User not logged in, set default state
+                    setIsLiked(false);
                 }
 
                 // Fetch other vlogs by the same user

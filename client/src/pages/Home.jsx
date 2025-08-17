@@ -44,6 +44,9 @@ export default function Home() {
               if (likeRes.ok) {
                 const { isLiked } = await likeRes.json();
                 likeStatuses[vlog._id] = isLiked;
+              } else if (likeRes.status === 401) {
+                // User not authenticated for this request, set default state
+                likeStatuses[vlog._id] = false;
               }
             } catch (error) {
               console.error('Error fetching like status for vlog:', vlog._id, error);
@@ -98,7 +101,11 @@ export default function Home() {
   };
 
   const handleLike = async (vlogId, currentLikeState) => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      // Redirect to sign in or show a message
+      alert('Please sign in to like vlogs');
+      return;
+    }
 
     try {
       const method = currentLikeState ? 'DELETE' : 'POST';
@@ -124,6 +131,8 @@ export default function Home() {
           }
           return vlog;
         }));
+      } else if (response.status === 401) {
+        alert('Please sign in to like vlogs');
       }
     } catch (error) {
       console.error('Error toggling like:', error);
@@ -287,11 +296,14 @@ export default function Home() {
                       <button 
                         onClick={() => handleLike(vlog._id, likeStates[vlog._id])}
                         className={`p-2 rounded-full transition-colors ${
-                          likeStates[vlog._id] 
-                            ? 'bg-red-500/80 text-white hover:bg-red-600/80' 
-                            : 'bg-black/30 text-white hover:bg-black/50'
+                          !currentUser 
+                            ? 'bg-gray-500/50 text-gray-400 cursor-not-allowed' 
+                            : likeStates[vlog._id] 
+                              ? 'bg-red-500/80 text-white hover:bg-red-600/80' 
+                              : 'bg-black/30 text-white hover:bg-black/50'
                         }`}
                         disabled={!currentUser}
+                        title={!currentUser ? 'Sign in to like' : 'Like this vlog'}
                       >
                         <FaHeart size={16} />
                       </button>

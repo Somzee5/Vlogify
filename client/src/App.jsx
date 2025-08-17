@@ -55,7 +55,7 @@ export default function App() {
     // Simulate initial app loading
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Reduced to 2 seconds for better UX
+    }, 1500); // Reduced to 1.5 seconds for better UX
 
     return () => clearTimeout(timer);
   }, [dispatch]);
