@@ -31,3 +31,5 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://vlogify-backend-t0le.onrender.com
+      - key: VITE_FRONTEND_URL
+        value: https://vlogify-frontend-yckt.onrender.com
