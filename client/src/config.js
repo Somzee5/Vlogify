@@ -8,8 +8,8 @@ const config = {
   },
   // Production - UPDATE THESE URLs AFTER DEPLOYMENT
   production: {
-    apiUrl: 'https://YOUR_ACTUAL_BACKEND_URL.onrender.com',
-    frontendUrl: 'https://YOUR_ACTUAL_FRONTEND_URL.onrender.com',
+    apiUrl: 'https://vlogify-backend-t0le.onrender.com',
+    frontendUrl: 'https://vlogify-frontend.onrender.com',
     appName: 'Vlogify'
   }
 };
