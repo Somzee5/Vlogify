@@ -10,6 +10,7 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [likeStates, setLikeStates] = useState({});
   const { currentUser } = useSelector(state => state.user);
 
   const categories = [
@@ -27,9 +28,30 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        // For now, just set vlogs without like status to avoid API calls
-        // Like status will be handled when user is authenticated and actually needs it
         setVlogs(data);
+        
+        // Fetch like status for each vlog if user is authenticated
+        if (currentUser) {
+          const likeStatuses = {};
+          for (const vlog of data) {
+            try {
+              const likeRes = await fetch(`${getApiUrl()}/api/like/status/${vlog._id}`, {
+                credentials: 'include',
+                headers: {
+                  'Content-Type': 'application/json',
+                }
+              });
+              if (likeRes.ok) {
+                const { isLiked } = await likeRes.json();
+                likeStatuses[vlog._id] = isLiked;
+              }
+            } catch (error) {
+              console.error('Error fetching like status for vlog:', vlog._id, error);
+              likeStatuses[vlog._id] = false;
+            }
+          }
+          setLikeStates(likeStatuses);
+        }
       } else {
         setError('Failed to fetch vlogs');
       }
@@ -73,6 +95,59 @@ export default function Home() {
       trekking: 'from-emerald-500 to-green-600'
     };
     return colors[category] || 'from-gray-500 to-slate-500';
+  };
+
+  const handleLike = async (vlogId, currentLikeState) => {
+    if (!currentUser) return;
+
+    try {
+      const method = currentLikeState ? 'DELETE' : 'POST';
+      const response = await fetch(`${getApiUrl()}/api/like/${vlogId}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        setLikeStates(prev => ({
+          ...prev,
+          [vlogId]: !currentLikeState
+        }));
+        
+        // Update the vlog's like count
+        setVlogs(prev => prev.map(vlog => {
+          if (vlog._id === vlogId) {
+            return {
+              ...vlog,
+              likeCount: currentLikeState ? (vlog.likeCount || 1) - 1 : (vlog.likeCount || 0) + 1
+            };
+          }
+          return vlog;
+        }));
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
+
+  const handleShare = async (vlog) => {
+    const shareData = {
+      title: vlog.title,
+      text: vlog.description.substring(0, 100) + '...',
+      url: `${window.location.origin}/vlog/${vlog._id}`
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        // You could add a toast notification here
+      }
+    } catch (error) {
+      await navigator.clipboard.writeText(shareData.url);
+      // You could add a toast notification here
+    }
   };
 
   if (loading) {
@@ -209,10 +284,21 @@ export default function Home() {
                       </span>
                     </div>
                     <div className="absolute top-3 right-3 flex space-x-2">
-                      <button className="p-2 bg-black/30 rounded-full text-white hover:bg-black/50 transition-colors">
+                      <button 
+                        onClick={() => handleLike(vlog._id, likeStates[vlog._id])}
+                        className={`p-2 rounded-full transition-colors ${
+                          likeStates[vlog._id] 
+                            ? 'bg-red-500/80 text-white hover:bg-red-600/80' 
+                            : 'bg-black/30 text-white hover:bg-black/50'
+                        }`}
+                        disabled={!currentUser}
+                      >
                         <FaHeart size={16} />
                       </button>
-                      <button className="p-2 bg-black/30 rounded-full text-white hover:bg-black/50 transition-colors">
+                      <button 
+                        onClick={() => handleShare(vlog)}
+                        className="p-2 bg-black/30 rounded-full text-white hover:bg-black/50 transition-colors"
+                      >
                         <FaShare size={16} />
                       </button>
                     </div>
@@ -247,32 +333,28 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Tags */}
-                    {vlog.tags && vlog.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {vlog.tags.slice(0, 3).map((tag, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
+                    {/* Tags and Like Count */}
+                    <div className="flex items-center justify-between mb-4">
+                      {vlog.tags && vlog.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {vlog.tags.slice(0, 3).map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="flex items-center space-x-1 text-gray-400 text-sm">
+                        <FaHeart className="text-red-500" />
+                        <span>{vlog.likeCount || 0}</span>
                       </div>
-                    )}
+                    </div>
 
                     {/* Author and Actions */}
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={vlog.userRef?.avatar || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
-                          alt="Author"
-                          className="w-8 h-8 rounded-full border-2 border-indigo-500/50"
-                        />
-                        <span className="text-gray-300 text-sm font-medium">
-                          {vlog.userRef?.username || 'Anonymous'}
-                        </span>
-                      </div>
                       <Link 
                         to={`/profile/${vlog.userRef?._id}`} 
                         className="flex items-center space-x-3 group hover:scale-105 transition-all duration-200 cursor-pointer"

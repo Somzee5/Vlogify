@@ -26,7 +26,10 @@ export default function App() {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(`${getApiUrl()}/api/auth/check-auth`, {
-          credentials: 'include'
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          }
         });
         
         if (response.ok) {
@@ -34,12 +37,15 @@ export default function App() {
           dispatch(signInSuccess(userData));
         } else if (response.status === 401) {
           // User is not authenticated - this is normal, not an error
-          // Silently handle this case without logging to reduce console noise
+          // Clear any existing user data
+          dispatch(signInSuccess(null));
         } else {
           console.log('Unexpected response from auth check:', response.status);
         }
       } catch (error) {
         console.log('Network error checking auth status:', error);
+        // On network error, assume user is not authenticated
+        dispatch(signInSuccess(null));
       }
     };
 
@@ -49,7 +55,7 @@ export default function App() {
     // Simulate initial app loading
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000); // Show loader for 3 seconds
+    }, 2000); // Reduced to 2 seconds for better UX
 
     return () => clearTimeout(timer);
   }, [dispatch]);

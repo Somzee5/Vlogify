@@ -134,6 +134,7 @@ export default function Profile() {
       const response = await fetch(`${getApiUrl()}/api/user/update/${currentUser._id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
 
@@ -182,6 +183,7 @@ export default function Profile() {
 
       const res = await fetch(`${getApiUrl()}/api/user/delete/${currentUser._id}`,{
         method: 'DELETE',
+        credentials: 'include',
       });
 
       const data = await res.json();
@@ -202,7 +204,9 @@ export default function Profile() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch(`${getApiUrl()}/api/auth/sign-out`);
+      const res = await fetch(`${getApiUrl()}/api/auth/sign-out`, {
+        credentials: 'include',
+      });
       const data = await res.json();
 
       if(data.success === false)
@@ -221,7 +225,9 @@ export default function Profile() {
   const handleShowVlogs = async () => {
     try {
       setShowVlogsError(false);
-              const res = await fetch(`${getApiUrl()}/api/user/public/vlog/${currentUser._id}`);
+              const res = await fetch(`${getApiUrl()}/api/user/public/vlog/${currentUser._id}`, {
+                credentials: 'include',
+              });
       const data = await res.json();
 
       if(data.success === false)
@@ -241,7 +247,7 @@ export default function Profile() {
     try {
               const res = await fetch(`${getApiUrl()}/api/vlog/delete/${vlogId}`, {
         method: 'DELETE',
-
+        credentials: 'include',
       });
 
       const data = res.json();

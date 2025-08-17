@@ -1,10 +1,29 @@
-import { FaPlus, FaGlobe, FaUsers, FaMountain, FaCompass } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { FaPlus, FaGlobe, FaUsers, FaMountain, FaCompass, FaSignOutAlt } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { signOutUserSuccess } from '../redux/user/userSlice.js';
+import { getApiUrl } from '../config.js';
 import logo from '../assets/vlogify_logo.jpg'
 
 export default function Header() {
   const { currentUser } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch(`${getApiUrl()}/api/auth/sign-out`, {
+        credentials: 'include',
+      });
+      
+      if (res.ok) {
+        dispatch(signOutUserSuccess());
+        navigate('/sign-in');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <nav className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg border-b border-indigo-500/20">
@@ -77,16 +96,25 @@ export default function Header() {
           </Link>
 
           {currentUser ? (
-            <Link to='/profile' className="flex items-center space-x-2 group">
-              <img
-                src={currentUser.avatar || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                alt="Profile"
-                className="w-10 h-10 rounded-full cursor-pointer border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-colors duration-200"
-              />
-              <span className="text-gray-300 group-hover:text-indigo-400 transition-colors duration-200 text-sm font-medium">
-                {currentUser.username}
-              </span>
-            </Link>
+            <div className="flex items-center space-x-3">
+              <Link to='/profile' className="flex items-center space-x-2 group">
+                <img
+                  src={currentUser.avatar || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full cursor-pointer border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-colors duration-200"
+                />
+                <span className="text-gray-300 group-hover:text-indigo-400 transition-colors duration-200 text-sm font-medium">
+                  {currentUser.username}
+                </span>
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center space-x-2 px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-all duration-200 border border-red-500/30"
+              >
+                <FaSignOutAlt className="text-sm" />
+                <span className="text-sm">Sign Out</span>
+              </button>
+            </div>
           ) : (
             <Link to="/sign-in">
               <button className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">

@@ -55,7 +55,10 @@ export default function Vlog() {
                 if (currentUser) {
                     try {
                         const likeRes = await fetch(`${getApiUrl()}/api/like/status/${params.vlogId}`, {
-                            credentials: 'include'
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
                         });
                         if (likeRes.ok) {
                             const { isLiked } = await likeRes.json();
