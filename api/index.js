@@ -52,6 +52,17 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Vlogify Backend is running!' });
 });
 
+// Test authentication endpoint
+app.get('/test-auth', (req, res) => {
+    const token = req.cookies.access_token;
+    res.status(200).json({ 
+        hasToken: !!token,
+        tokenLength: token?.length,
+        cookies: Object.keys(req.cookies || {}),
+        userAgent: req.headers['user-agent']
+    });
+});
+
 // middleware
 app.use((err, req, res, next) => {
     

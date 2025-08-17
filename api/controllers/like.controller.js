@@ -60,7 +60,22 @@ export const unlikeVlog = async (req, res, next) => {
 export const getLikeStatus = async (req, res, next) => {
     try {
         const { vlogId } = req.params;
-        const userId = req.user.id;
+        
+        // Debug logging
+        console.log('Like status request:', {
+            vlogId,
+            userId: req.user?.id,
+            user: req.user,
+            cookies: req.cookies
+        });
+        
+        const userId = req.user?.id;
+        
+        if (!userId) {
+            // Return false for unauthenticated users
+            console.log('No user ID found, returning isLiked: false');
+            return res.status(200).json({ isLiked: false });
+        }
 
         const like = await Like.findOne({ vlogId, userId });
         const isLiked = !!like;
